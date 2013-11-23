@@ -59,6 +59,12 @@ namespace FontServer
             this._hmmGenerator.func_train(trainset_array, outputLabel_array);
         }
 
+        public int func_analyze(int[] sequence)
+        {
+           
+            return this._hmmGenerator.func_analyze(sequence);
+        }
+
       
     }
 }

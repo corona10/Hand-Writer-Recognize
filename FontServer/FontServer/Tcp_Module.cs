@@ -37,7 +37,7 @@ namespace FontServer
         
         
 
-        private string _db_url = "mongodb://168.188.111.43:21/test";
+        private string _db_url = "";
         private MongoClient _db_client;
 
         private int m_numConnections;   // the maximum number of connections the sample is designed to handle simultaneously 
@@ -139,15 +139,17 @@ namespace FontServer
                     tcp_socket.Receive(received_byte);
                     CPacket receivedPacket = Utility.func_ReadJson(received_byte);
                     Utility.func_DisplayPacketInfo(receivedPacket);
+                    int value = -1 ;
                     if (this.func_IsTrain(receivedPacket) == true)
                     {
                         this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
                         this._cmm.func_train();
                     }else if(this.func_IsRequest(receivedPacket) == true)
                     {
-
+                        Console.WriteLine("분석을 시작합니다.");
+                        value = this._cmm.func_analyze(receivedPacket._newSequence);
                     }
-                    CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, 1, receivedPacket._newSequence);
+                    CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, value, receivedPacket._newSequence);
                     
                     
                     this.func_SendPacket2Client(returnPacket, tcp_socket);
