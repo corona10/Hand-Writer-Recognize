@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="InterfaceTest.Constants">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Constants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.CPacket">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="InterfaceTest.CPacket.Kind" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CPacket.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="InterfaceTest.CPacket.Direction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CPacket.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ABIAAAAAEAAAAQAAAAAAAAAAAABAEAAAAAAAAAAAIAA=</HashCode>
+      <FileName>CPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.MainForm">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABgQAACAICBAAQgGAAAACQAAYAAAgECQAAAAAgCI=</HashCode>
+      <FileName>MainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.Program">
+    <Position X="0.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.TcpClientModule">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAQgAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TcpModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.Utility">
+    <Position X="2.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAARAAACAAAAAAACQAAAAA=</HashCode>
+      <FileName>Utility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.Properties.Resources">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceTest.Properties.Settings">
+    <Position X="4.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

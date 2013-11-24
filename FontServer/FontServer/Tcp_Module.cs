@@ -144,6 +144,15 @@ namespace FontServer
                             CPacket receivedPacket = Utility.func_ReadJson(received_byte);
                             Utility.func_DisplayPacketInfo(receivedPacket);
                             int value = -1;
+
+                            if (receivedPacket._newSequence.Length == 0)
+                            {
+                                Console.WriteLine("[ip]: " + tcp_socket.RemoteEndPoint.ToString() + "가 의미없는 데이터를 보냈습니다.");
+                                Console.WriteLine("[ip] :" + tcp_socket.RemoteEndPoint.ToString() + " 접속 종료");
+                                tcp_socket.Close();
+                                break;
+                            }
+
                             if (this.func_IsTrain(receivedPacket) == true)
                             {
                                 this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
@@ -158,7 +167,7 @@ namespace FontServer
 
 
                             this.func_SendPacket2Client(returnPacket, tcp_socket);
-
+                            
 
                         }
                         catch (NullReferenceException ne)
@@ -170,13 +179,13 @@ namespace FontServer
                         }
                     Console.WriteLine("[ip] :" + tcp_socket.RemoteEndPoint.ToString() + " 접속 종료");
                     tcp_socket.Close();
-
+                    Thread.Sleep(150);
                 }
             }
             catch (SocketException se)
             {
                 Console.WriteLine("클라이언트가 접속을 끊었습니다");
-
+               
             }
           
         }

@@ -54,6 +54,7 @@ namespace InterfaceTest
 
                     }
                 }
+                tcpClient.Close();
                 tcpStream.Close();
             }
             catch (Exception e)
