@@ -44,9 +44,14 @@ namespace fontWriter
         }
         static public void func_DisplayPacketInfo(CPacket packet)
         {
-
-            Console.WriteLine("kind: " + packet.func_GetKind() + " value: " + packet.func_GetValue().ToString() + " sequence 길이: " + packet.func_GetSequence().Length);
-
+            try
+            {
+                Console.WriteLine("kind: " + packet.func_GetKind() + " value: " + packet.func_GetValue().ToString() + " sequence 길이: " + packet.func_GetSequence().Length);
+            }
+            catch (NullReferenceException ne)
+            {
+                Console.WriteLine("잘못된 패킷");
+            }
         }
 
         static public CPacket func_decode_packet(byte[] bson)

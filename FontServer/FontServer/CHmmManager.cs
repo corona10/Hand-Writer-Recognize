@@ -15,7 +15,7 @@ namespace FontServer
         private ArrayList _trainingSet;
         private ArrayList _outputLabels;
 
-        private CHMMGenerator _hmmGenerator = new CHMMGenerator(8, 3);
+        private CHMMGenerator _hmmGenerator = new CHMMGenerator(8, 128);
         private CTrainer _hmmTrainer = new CTrainer();
 
         private CHmmManager()

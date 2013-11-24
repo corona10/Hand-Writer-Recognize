@@ -36,6 +36,7 @@ namespace FontServer
         }
         public int func_analyze(int[] newSequence)
         {
+            
             return this._Analyzer.func_analyze(newSequence, _Classifier);
         }
         public double func_getProb(int[] newSequence)

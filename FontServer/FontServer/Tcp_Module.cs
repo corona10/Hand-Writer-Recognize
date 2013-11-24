@@ -37,7 +37,7 @@ namespace FontServer
         
         
 
-        private string _db_url = "";
+        private string _db_url = "mongodb://168.188.111.43:21/test";
         private MongoClient _db_client;
 
         private int m_numConnections;   // the maximum number of connections the sample is designed to handle simultaneously 
@@ -131,38 +131,54 @@ namespace FontServer
             {
                 while (true)
                 {
+                    
+                        Socket tcp_socket = _tcpListener.AcceptSocket();
+                        Console.WriteLine("클라이언트 연결 성공 [ip]: " + tcp_socket.RemoteEndPoint.ToString());
 
-                    Socket tcp_socket = _tcpListener.AcceptSocket();
-                    Console.WriteLine("클라이언트 연결 성공 [ip]: " + tcp_socket.RemoteEndPoint.ToString());
-                    Byte[] received_byte = new Byte[1024];
+                        try
+                        {
+                            Byte[] received_byte = new Byte[1024];
 
-                    tcp_socket.Receive(received_byte);
-                    CPacket receivedPacket = Utility.func_ReadJson(received_byte);
-                    Utility.func_DisplayPacketInfo(receivedPacket);
-                    int value = -1 ;
-                    if (this.func_IsTrain(receivedPacket) == true)
-                    {
-                        this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
-                        this._cmm.func_train();
-                    }else if(this.func_IsRequest(receivedPacket) == true)
-                    {
-                        Console.WriteLine("분석을 시작합니다.");
-                        value = this._cmm.func_analyze(receivedPacket._newSequence);
-                    }
-                    CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, value, receivedPacket._newSequence);
-                    
-                    
-                    this.func_SendPacket2Client(returnPacket, tcp_socket);
-                    
-                    Console.WriteLine("접속 종료");
+                            tcp_socket.Receive(received_byte);
+
+                            CPacket receivedPacket = Utility.func_ReadJson(received_byte);
+                            Utility.func_DisplayPacketInfo(receivedPacket);
+                            int value = -1;
+                            if (this.func_IsTrain(receivedPacket) == true)
+                            {
+                                this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
+                                this._cmm.func_train();
+                            }
+                            else if (this.func_IsRequest(receivedPacket) == true)
+                            {
+                                Console.WriteLine("분석을 시작합니다.");
+                                value = this._cmm.func_analyze(receivedPacket._newSequence);
+                            }
+                            CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, value, receivedPacket._newSequence);
+
+
+                            this.func_SendPacket2Client(returnPacket, tcp_socket);
+
+
+                        }
+                        catch (NullReferenceException ne)
+                        {
+                            Console.WriteLine("Null 패킷 발생");
+                            int[] error = {-1};
+                            CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, -1, error );
+                            this.func_SendPacket2Client(returnPacket, tcp_socket);
+                        }
+                    Console.WriteLine("[ip] :" + tcp_socket.RemoteEndPoint.ToString() + " 접속 종료");
+                    tcp_socket.Close();
 
                 }
             }
             catch (SocketException se)
             {
                 Console.WriteLine("클라이언트가 접속을 끊었습니다");
-                
+
             }
+          
         }
 
         private bool func_IsTrain(CPacket packet)

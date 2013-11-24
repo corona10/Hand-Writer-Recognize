@@ -10,7 +10,7 @@ namespace fontWrtier
     {
         static void Main(string[] args)
         {
-            TcpClientModule test = new TcpClientModule("localhost", 8000);
+            TcpClientModule test = new TcpClientModule("168.188.111.43", 22);
             test.run();
         }
     }
