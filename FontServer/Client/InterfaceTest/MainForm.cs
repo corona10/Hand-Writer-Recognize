@@ -99,10 +99,59 @@ namespace InterfaceTest
         {
             int direction=0;
             double x3, y3;
-            double angle;
-
+            //double angle;
             x3 = x2 - x1;
-            y3 = y2 - y1;
+            y3 = y1 - y2;
+            double angle = Math.Atan((double)y3 / (double)Math.Abs(x3));
+            if (x3 < 0)
+            {
+                if (angle < -Math.PI * 3 / 8)
+                {
+                    return 6;
+                }
+                else if (angle >= -Math.PI * 3 / 8 && angle < -Math.PI / 8)
+                {
+                    return 5;
+                }
+                else if (angle >= -Math.PI / 8 && angle < Math.PI / 8)
+                {
+                    return 4;
+                }
+                else if (angle >= Math.PI / 8 && angle < Math.PI * 3 / 8)
+                {
+                    return 3;
+                }
+                else if (angle >= Math.PI * 3 / 8)
+                {
+                    return 2;
+                }
+            }
+            else
+            {
+                if (angle < -Math.PI * 3 / 8)
+                {
+                    return 6;
+                }
+                else if (angle >= -Math.PI * 3 / 8 && angle < -Math.PI / 8)
+                {
+                    return 7;
+                }
+                else if (angle >= -Math.PI / 8 && angle < Math.PI / 8)
+                {
+                    return 0;
+                }
+                else if (angle >= Math.PI / 8 && angle < Math.PI * 3 / 8)
+                {
+                    return 1;
+                }
+                else if (angle >= Math.PI * 3 / 8)
+                {
+                    return 2;
+                }
+            }
+            /*
+            x3 = x2 - x1;
+            y3 = y1 - y2;
 
 
 
@@ -110,8 +159,9 @@ namespace InterfaceTest
             {
                 x3 = 0.00000001;
             }
+            if(y3>=0 && x3 >=0)
+                angle = Math.Atan(y3 / x3);
 
-            angle = Math.Atan(y3 / x3);
 
             if (0 <= angle && angle < Constants.PI / 4)
                 direction = 0;
@@ -129,7 +179,7 @@ namespace InterfaceTest
                 direction = 6;
             else if (Constants.PI * 7 / 4 <= angle && angle < Constants.PI * 2)
                 direction = 7;
-
+            */
             /*
             if (x3 < 0)
                 angle += (Constants.PI);
