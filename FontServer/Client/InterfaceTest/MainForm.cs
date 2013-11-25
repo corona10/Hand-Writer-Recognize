@@ -60,15 +60,15 @@ namespace InterfaceTest
             List<int> Direction = new List<int>();
 
             // Calculate Direction
-            for (int i = 0; i < SavedPointX.Count-1; i++)
+            for (int i = 0; i < SavedPointX.Count - 1; i++)
                 Direction.Add(GetDirection(SavedPointX[i], SavedPointY[i], SavedPointX[i + 1], SavedPointY[i + 1]));
-            
+
             //Check Training Mode 
             if (radioButton1.Checked)
             {
                 if (Convert.ToInt32(textBox1.Text) >= 0 && Convert.ToInt32(textBox1.Text) <= 9)
                 {
-                    
+
                     CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, Convert.ToInt32(textBox1.Text), Direction.ToArray());
                     Thread th = new Thread(new ParameterizedThreadStart(run));
                     th.Start(packet);
@@ -82,11 +82,11 @@ namespace InterfaceTest
                 CPacket packet = new CPacket(CPacket.Kind.REQUEST, 1, Direction);
                 Thread th = new Thread(new ParameterizedThreadStart(run));
                 th.Start(packet);
-                
+
             }
             //Don`t checking
             else
-            {            
+            {
                 MessageBox.Show("radioButton을 check해주세요.");
             }
 
@@ -97,20 +97,40 @@ namespace InterfaceTest
 
         private int GetDirection(int x1, int y1, int x2, int y2)
         {
-            int direction;
+            int direction=0;
             double x3, y3;
             double angle;
 
             x3 = x2 - x1;
             y3 = y2 - y1;
 
+
+
             if (x3 == 0)
             {
                 x3 = 0.00000001;
             }
 
-            angle = Math.Atan(-y3 / x3);
+            angle = Math.Atan(y3 / x3);
 
+            if (0 <= angle && angle < Constants.PI / 4)
+                direction = 0;
+            else if (Constants.PI / 4 <= angle && angle < Constants.PI / 2)
+                direction = 1;
+            else if (Constants.PI / 2 <= angle && angle < Constants.PI * 3 / 4)
+                direction = 2;
+            else if (Constants.PI * 3 / 4 <= angle && angle < Constants.PI)
+                direction = 3;
+            else if (Constants.PI <= angle && angle < Constants.PI * 5 / 4)
+                direction = 4;
+            else if (Constants.PI * 5 / 4 <= angle && angle < Constants.PI * 3 / 2)
+                direction = 5;
+            else if (Constants.PI * 3 / 2 <= angle && angle < Constants.PI * 7 / 4)
+                direction = 6;
+            else if (Constants.PI * 7 / 4 <= angle && angle < Constants.PI * 2)
+                direction = 7;
+
+            /*
             if (x3 < 0)
                 angle += (Constants.PI);
 
@@ -147,7 +167,7 @@ namespace InterfaceTest
                     direction = 7;
                     break;
             }
-
+            */
             return direction;
         }
 
@@ -166,7 +186,7 @@ namespace InterfaceTest
                 {
 
                     string json = Utility.func_WriteJson(pac);
-                    
+
                     byte[] jsontest = Utility.func_Json2Byte(json);
                     tcpStream.Write(jsontest, 0, json.Length);
                     tcpStream.Flush();
@@ -182,9 +202,9 @@ namespace InterfaceTest
                         int nBytesReceived = tcpStream.Read(received, 0, received.Length);
 
                         CPacket test_read_packet = Utility.func_ReadJson(received);
-                       
+
                         MessageBox.Show("인식값: " + test_read_packet._value.ToString());
-                        
+
                     }
                     Thread.Sleep(150);
                 }
