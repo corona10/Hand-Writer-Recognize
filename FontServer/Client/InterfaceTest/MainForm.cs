@@ -105,8 +105,16 @@ namespace InterfaceTest
 
             // Calculate Direction
             for (int i = 0; i < SavedPointX.Count - 1; i++)
-                Direction.Add(GetDirection(SavedPointX[i], SavedPointY[i], SavedPointX[i + 1], SavedPointY[i + 1]));
-
+            {
+                int direction = GetDirection(SavedPointX[i], SavedPointY[i], SavedPointX[i + 1], SavedPointY[i + 1]);
+                if (direction != -1)
+                    Direction.Add(direction);
+                else
+                {
+                    Direction.Clear();
+                    return;
+                }
+            }
             //Check Training Mode 
             if (radioButton1.Checked)
             {
@@ -141,7 +149,7 @@ namespace InterfaceTest
 
         private int GetDirection(int x1, int y1, int x2, int y2)
         {
-            int direction=0;
+            //int direction=0;
             double x3, y3;
             //double angle;
             x3 = x2 - x1;
