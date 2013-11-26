@@ -20,40 +20,84 @@ namespace InterfaceTest
         private int _tcpPort = 22;
         private string _server = "168.188.111.43";
         private bool DONE = false;
+        private int count=0;
+        //Bitmap drawing;
+
+
+        int pX = -1;
+        int pY = -1;
 
         public MainForm()
         {
             InitializeComponent();
+            //drawing = new Bitmap(MainForm.Width, panel1.Height, panel1.CreateGraphics());
+            //Graphics.FromImage(drawing).Clear(Color.White);
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
             MouseClick = true;
+            this.pX = e.X;
+            this.pY = e.Y;
+            count = 0;
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
             MouseClick = false;
+            count = 0;
         }
+
+ 
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            // Drawing
+            
             if (MouseClick == true)
             {
+                
                 Form frm = (MainForm)sender;
                 Graphics g = frm.CreateGraphics();
 
-                Bitmap bmOnePixel = new Bitmap(1, 1);
-                bmOnePixel.SetPixel(0, 0, Color.Black);
-                g.DrawImage(bmOnePixel, new Point(e.X, e.Y));
+                Pen pen = new Pen(Color.Black, 14);
+
+                pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+
+                g.DrawLine(pen, pX, pY, e.X, e.Y);
+
+                //Bitmap bmOnePixel = new Bitmap(1, 1);
+                //bmOnePixel.SetPixel(0, 0, Color.Black);
+                //g.DrawImage(bmOnePixel, new Point(e.X, e.Y));
                 g.Dispose();
 
-                SavedPointX.Add(e.X);
-                SavedPointY.Add(e.Y);
-            }
-        }
 
+                if (count % 2 == 0)
+                {
+                    SavedPointX.Add(e.X);
+                    SavedPointY.Add(e.Y);
+                }
+                count++;
+            }
+            pX = e.X;
+            pY = e.Y;
+        }
+        /*
+        private static DateTime Delay(int MS)
+        {
+            DateTime ThisMoment = DateTime.Now;
+            TimeSpan duration = new TimeSpan(0, 0, 0, 0, MS);
+            DateTime AfterWards = ThisMoment.Add(duration);
+
+            while (AfterWards >= ThisMoment)
+            {
+                System.Windows.Forms.Application.DoEvents();
+                ThisMoment = DateTime.Now;
+            }
+
+            return DateTime.Now;
+        }
+        */
         private void button2_Click(object sender, EventArgs e)
         {
             Graphics g = CreateGraphics();
@@ -218,7 +262,7 @@ namespace InterfaceTest
                     break;
             }
             */
-            return direction;
+            return -1;
         }
 
         private void run(object packet)
