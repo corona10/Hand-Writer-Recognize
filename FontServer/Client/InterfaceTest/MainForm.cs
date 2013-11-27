@@ -39,13 +39,13 @@ namespace InterfaceTest
             MouseClick = true;
             this.pX = e.X;
             this.pY = e.Y;
-            count = 0;
+            //count = 0;
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
             MouseClick = false;
-            count = 0;
+            //count = 0;
         }
 
  
@@ -70,13 +70,9 @@ namespace InterfaceTest
                 //bmOnePixel.SetPixel(0, 0, Color.Black);
                 //g.DrawImage(bmOnePixel, new Point(e.X, e.Y));
                 g.Dispose();
-
-
-                if (count % 2 == 0)
-                {
-                    SavedPointX.Add(e.X);
-                    SavedPointY.Add(e.Y);
-                }
+                            
+                SavedPointX.Add(e.X);
+                SavedPointY.Add(e.Y);
                 count++;
             }
             pX = e.X;
@@ -108,10 +104,17 @@ namespace InterfaceTest
             {
                 int direction = GetDirection(SavedPointX[i], SavedPointY[i], SavedPointX[i + 1], SavedPointY[i + 1]);
                 if (direction != -1)
+                {
                     Direction.Add(direction);
+                    
+                }
                 else
                 {
+                    MessageBox.Show("잘못된 방향값입니다.");
                     Direction.Clear();
+                    g.Clear(System.Drawing.SystemColors.Control);
+                    SavedPointX.Clear();
+                    SavedPointY.Clear();
                     return;
                 }
             }
@@ -141,8 +144,9 @@ namespace InterfaceTest
             {
                 MessageBox.Show("radioButton을 check해주세요.");
             }
-
+            MessageBox.Show("count : " + count);
             g.Clear(System.Drawing.SystemColors.Control);
+            count = 0;
             SavedPointX.Clear();
             SavedPointY.Clear();
         }
