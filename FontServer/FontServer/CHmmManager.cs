@@ -56,10 +56,10 @@ namespace FontServer
 
             if (trainset_array.Length == 0 || outputLabel_array.Length == 0)
             {
-                Console.WriteLine("Train 할 수 없습니다.");
+                Console.WriteLine("[Error] Because of Wrong data  It can not be trained!");
                 return;
             }
-            Console.WriteLine("Train을 시작합니다.");
+            Console.WriteLine("[System] Train for new sequence. ");
             this._hmmGenerator.func_train(trainset_array, outputLabel_array);
         }
 

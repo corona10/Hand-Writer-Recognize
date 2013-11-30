@@ -57,10 +57,15 @@ namespace FontServer
             try
             {
                 
-                this._dbThread = new Thread(new ThreadStart(CMongoManager.func_Connect2MongoDB));
+                this._dbThread = new Thread(new ThreadStart(this._cMongo.func_Connect2MongoDB));
                 this._tcpThread = new Thread(new ThreadStart(this.tcp));
-                Console.WriteLine("* Now Tryig to Connect DB Server...");
+                Console.WriteLine("* Try to Connect DB Server...");
 
+                this._dbThread.Start();
+                this._dbThread.Join();
+
+                this._dbThread = new Thread(new ThreadStart(this.func_InitializeTrainingSet));
+               
                 this._dbThread.Start();
                 this._dbThread.Join();
 
@@ -129,7 +134,7 @@ namespace FontServer
 
                             if (this.func_IsTrain(receivedPacket) == true)
                             {
-                                CMongoManager.func_insertTraingset(receivedPacket);
+                                this._cMongo.func_insertTraingset(receivedPacket);
                                 this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
                                 this._cmm.func_train();
                             }
@@ -203,6 +208,22 @@ namespace FontServer
             byte[] sendbyte = Utility.func_Json2Byte(json);
 
             sc.Send(sendbyte, sendbyte.Length, 0);
+        }
+
+        private void func_InitializeTrainingSet() // DB에 저장된 트레이닝 셋을 초기화합니다.
+        {
+            
+            List<CCollectionData> datalist = this._cMongo.func_getCollection();
+            foreach (CCollectionData data in datalist)
+            {
+                this._cmm.func_addTrainingSet((int)data._valkind, data._sequence );
+            }
+
+            Console.Write("* Loading Traing set from Database.......... ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" [SUCCESS]");
+            Console.ResetColor();
+
         }
 
 

@@ -41,7 +41,9 @@ namespace FontServer
             
         }
 
-        static public void func_Connect2MongoDB()
+     
+
+         public void func_Connect2MongoDB()
         {
             try
             {
@@ -51,7 +53,7 @@ namespace FontServer
                     _db_client.GetServer().Connect();
                 }
                 Console.WriteLine("* MongoDB Version Info " + _db_client.GetServer().BuildInfo.VersionString);
-                Console.WriteLine("* MongoDB Server IP Adress : " + _db_url);
+                Console.WriteLine("* MongoDB Server IP Address : " + _db_url);
                 Console.WriteLine("* MongoDB Server Connection Status: " + _db_client.GetServer().State);
 
 
@@ -78,8 +80,15 @@ namespace FontServer
 
 
         }
+         public List<CCollectionData> func_getCollection()
+         {
+             MongoCursor<CCollectionData> cursor = _dbCollection.FindAll();
 
-        static public void func_insertTraingset(CPacket packet)
+             return cursor.ToList<CCollectionData>();
+
+         }
+
+         public void func_insertTraingset(CPacket packet)
         {
             try
             {
