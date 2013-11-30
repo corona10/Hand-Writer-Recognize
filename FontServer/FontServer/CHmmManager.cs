@@ -15,14 +15,18 @@ namespace FontServer
         private ArrayList _trainingSet;
         private ArrayList _outputLabels;
 
-        private CHMMGenerator _hmmGenerator = new CHMMGenerator(8, 128);
+        private CHMMGenerator _hmmGenerator = new CHMMGenerator(5, 30);
         private CTrainer _hmmTrainer = new CTrainer();
 
         private CHmmManager()
         {
             this._trainingSet = new ArrayList();
             this._outputLabels = new ArrayList();
-            Console.WriteLine("CHmmManager 초기화");
+            Console.Write("* CHmmManager Initialized.......... ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" [SUCCESS]");
+            Console.ResetColor();
+
         }
 
         public static CHmmManager func_Instance()
@@ -65,6 +69,15 @@ namespace FontServer
             return this._hmmGenerator.func_analyze(sequence);
         }
 
+        public int[][] func_getTrainingSet()
+        {
+            return (int[][])this._trainingSet.ToArray(typeof(int[]));
+        }
+
+        public int[] func_getOutputLabels()
+        {
+            return (int[])this._outputLabels.ToArray(typeof(int));
+        }
       
     }
 }

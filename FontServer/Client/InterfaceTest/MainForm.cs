@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,70 +15,69 @@ namespace InterfaceTest
 {
     public partial class MainForm : Form
     {
-        private bool MouseClick = false;
-        private List<int> SavedPointX = new List<int>();
-        private List<int> SavedPointY = new List<int>();
-        private int _tcpPort = 22;
-        private string _server = "168.188.111.43";
+        private bool _mouseClick = false;
+        private List<int> _savedPointX = new List<int>();
+        private List<int> _savedPointY = new List<int>();
+        private int _tcpPort = 0;
+        private string _server = null;
         private bool DONE = false;
-        private int count=0;
-        //Bitmap drawing;
+        private int _count=0;
+        private string _text = null;
 
-
-        int pX = -1;
-        int pY = -1;
+        int _pX = -1;
+        int _pY = -1;
 
         public MainForm()
         {
             InitializeComponent();
-            //drawing = new Bitmap(MainForm.Width, panel1.Height, panel1.CreateGraphics());
-            //Graphics.FromImage(drawing).Clear(Color.White);
-        }
-
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
-        {
-            MouseClick = true;
-            this.pX = e.X;
-            this.pY = e.Y;
-            //count = 0;
-        }
-
-        private void Form1_MouseUp(object sender, MouseEventArgs e)
-        {
-            MouseClick = false;
-            //count = 0;
-        }
-
- 
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
             
-            if (MouseClick == true)
+            this.panel.Paint += new PaintEventHandler(Panel_Paint);
+            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Panel_MouseDown);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Panel_MouseMove);
+            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Panel_MouseUp);
+        }
+        void Panel_Paint(object sender, PaintEventArgs s)
+        {
+        }
+
+        private void Panel_MouseDown(object sender, MouseEventArgs e)
+        {
+            _mouseClick = true;
+            this._pX = e.X;
+            this._pY = e.Y;
+        }
+
+        private void Panel_MouseUp(object sender, MouseEventArgs e)
+        {
+            _mouseClick = false;
+        }
+        
+        //Drawing
+        private void Panel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_mouseClick == true)
             {
                 
-                Form frm = (MainForm)sender;
+                Panel frm = (Panel)sender;
                 Graphics g = frm.CreateGraphics();
-
+                
                 Pen pen = new Pen(Color.Black, 14);
 
                 pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                 pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-
-                g.DrawLine(pen, pX, pY, e.X, e.Y);
-
-                //Bitmap bmOnePixel = new Bitmap(1, 1);
-                //bmOnePixel.SetPixel(0, 0, Color.Black);
-                //g.DrawImage(bmOnePixel, new Point(e.X, e.Y));
+                
+                g.DrawLine(pen, _pX, _pY, e.X, e.Y);
+                
                 g.Dispose();
                             
-                SavedPointX.Add(e.X);
-                SavedPointY.Add(e.Y);
-                count++;
+                _savedPointX.Add(e.X);
+                _savedPointY.Add(e.Y);
+                _count++;
             }
-            pX = e.X;
-            pY = e.Y;
+            _pX = e.X;
+            _pY = e.Y;
         }
+
         /*
         private static DateTime Delay(int MS)
         {
@@ -94,61 +94,96 @@ namespace InterfaceTest
             return DateTime.Now;
         }
         */
+
         private void button2_Click(object sender, EventArgs e)
         {
             Graphics g = CreateGraphics();
-            List<int> Direction = new List<int>();
+            List<int> direction = new List<int>();
 
+            _server = IP_TextBox.Text;
+            _tcpPort = Convert.ToInt32(portTextBox.Text);
+            
             // Calculate Direction
-            for (int i = 0; i < SavedPointX.Count - 1; i++)
+            for (int i = 0; i < _savedPointX.Count - 1; i++)
             {
-                int direction = GetDirection(SavedPointX[i], SavedPointY[i], SavedPointX[i + 1], SavedPointY[i + 1]);
-                if (direction != -1)
+                int tempDirection = GetDirection(_savedPointX[i], _savedPointY[i], _savedPointX[i + 1], _savedPointY[i + 1]);
+                if (tempDirection != -1)
                 {
-                    Direction.Add(direction);
+                    direction.Add(tempDirection);
                     
                 }
                 else
                 {
                     MessageBox.Show("잘못된 방향값입니다.");
-                    Direction.Clear();
+                    direction.Clear();
                     g.Clear(System.Drawing.SystemColors.Control);
-                    SavedPointX.Clear();
-                    SavedPointY.Clear();
+                    _savedPointX.Clear();
+                    _savedPointY.Clear();
                     return;
                 }
             }
             //Check Training Mode 
-            if (radioButton1.Checked)
+            if (trainRadioButton.Checked)
             {
-                if (Convert.ToInt32(textBox1.Text) >= 0 && Convert.ToInt32(textBox1.Text) <= 9)
+                try
                 {
-
-                    CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, Convert.ToInt32(textBox1.Text), Direction.ToArray());
-                    Thread th = new Thread(new ParameterizedThreadStart(run));
-                    th.Start(packet);
+                    if ((Convert.ToInt32(infoTextBox.Text) >= 0 && Convert.ToInt32(infoTextBox.Text) <= 9))
+                    {
+                        CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text)), direction.ToArray());
+                        MessageBox.Show("ValueKind : " + (CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text)));
+                        Thread th = new Thread(new ParameterizedThreadStart(run));
+                        th.Start(packet);
+                    }
+                    else
+                        MessageBox.Show("Training Info Error");
                 }
-                else
-                    MessageBox.Show("error");
+                catch (Exception e1)
+                {
+                    try
+                    {
+                        if ( Convert.ToChar(infoTextBox.Text) >= 'a' && Convert.ToChar(infoTextBox.Text) <= 'z')
+                        {
+                            CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text)-61), direction.ToArray());
+                            MessageBox.Show("ValueKind : " +  (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text)-61));
+                            Thread th = new Thread(new ParameterizedThreadStart(run));
+                            th.Start(packet);
+                        }
+                        else if (Convert.ToChar(infoTextBox.Text) >= 'A' && Convert.ToChar(infoTextBox.Text) <= 'Z')
+                        {
+                            CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text) - 55), direction.ToArray());
+                            MessageBox.Show("ValueKind : " + (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text) - 55));
+                            Thread th = new Thread(new ParameterizedThreadStart(run));
+                            th.Start(packet);
+                        }
+                        else
+                            MessageBox.Show("Training Info Error");
+                    }
+                    catch (Exception e2)
+                    {
+                        MessageBox.Show("Training Info Error");
+                    }
+                }
             }
+
             //Check Analysis Mode
-            else if (radioButton2.Checked)
+            else if (analysisRadioButton.Checked)
             {
-                CPacket packet = new CPacket(CPacket.Kind.REQUEST, 1, Direction);
+                CPacket packet = new CPacket(CPacket.Kind.REQUEST, CPacket.ValueKind.NONE, direction);
                 Thread th = new Thread(new ParameterizedThreadStart(run));
                 th.Start(packet);
-
+                //MessageBox.Show();
             }
             //Don`t checking
             else
             {
                 MessageBox.Show("radioButton을 check해주세요.");
             }
-            MessageBox.Show("count : " + count);
-            g.Clear(System.Drawing.SystemColors.Control);
-            count = 0;
-            SavedPointX.Clear();
-            SavedPointY.Clear();
+
+            //Clear
+            panel.Refresh();
+            _count = 0;
+            _savedPointX.Clear();
+            _savedPointY.Clear();
         }
 
         private int GetDirection(int x1, int y1, int x2, int y2)
@@ -309,8 +344,10 @@ namespace InterfaceTest
 
                         CPacket test_read_packet = Utility.func_ReadJson(received);
 
+                        //textBox4에 출력
+                        _text += test_read_packet._value.ToString();
+                        textBox.Text = _text;
                         MessageBox.Show("인식값: " + test_read_packet._value.ToString());
-
                     }
                     Thread.Sleep(150);
                 }
@@ -324,14 +361,16 @@ namespace InterfaceTest
             }
         }
 
+        //Analysis RadioButton
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            textBox1.Enabled = false;
+            infoTextBox.Enabled = false;
         }
 
+        //Training RadioButton
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            textBox1.Enabled = true;
+            infoTextBox.Enabled = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -339,9 +378,40 @@ namespace InterfaceTest
 
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        //Clear Button
+        private void button3_Click(object sender, EventArgs e)
         {
+            panel.Refresh();
+            _count = 0;
+            _savedPointX.Clear();
+            _savedPointY.Clear();
+        }
 
+        //Save Button
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.InitialDirectory = @"C:\";
+            saveFile.DefaultExt = "txt";
+            saveFile.Filter = "Text Files (*.txt)|*.txt; | All files (*.*)|*.*;";
+
+            if (saveFile.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter streamWriter = new StreamWriter(saveFile.FileName, true, Encoding.Default);
+
+                streamWriter.Write(textBox.Text);
+
+                streamWriter.Close();
+
+                MessageBox.Show("저장 완료");
+            } 
+        }
+
+        //Delete All Button
+        private void button5_Click(object sender, EventArgs e)
+        {
+            _text = null;
+            textBox.Text = _text;
         }
     }
 }

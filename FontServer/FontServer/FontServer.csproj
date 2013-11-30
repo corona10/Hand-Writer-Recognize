@@ -81,9 +81,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CAnalyzer.cs" />
+    <Compile Include="CCollectionData.cs" />
     <Compile Include="CHMMGenerator.cs" />
     <Compile Include="CHmmManager.cs" />
     <Compile Include="CInputSequences.cs" />
+    <Compile Include="CMongoManager.cs" />
     <Compile Include="COutputSequences.cs" />
     <Compile Include="CTrainer.cs" />
     <Compile Include="Direction.cs" />
@@ -92,6 +94,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp_Module.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="ValueKind.cs" />
+    <Compile Include="ValueKindMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

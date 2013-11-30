@@ -26,6 +26,7 @@ namespace FontServer
         public const int MAXIMUM_USER = 50;
 
         private CHmmManager _cmm = CHmmManager.func_Instance();
+        private CMongoManager _cMongo = CMongoManager.func_Instance();
         private static TcpListener _tcpListener;
         private CPacket _packet;
         private MemoryStream _ms;
@@ -35,11 +36,6 @@ namespace FontServer
         private Thread _dbThread;
 
         
-        
-
-        private string _db_url = "mongodb://168.188.111.43:21/test";
-        private MongoClient _db_client;
-
         private int m_numConnections;   // the maximum number of connections the sample is designed to handle simultaneously 
         private int m_receiveBufferSize;// buffer size to use for each socket I/O operation 
         //BufferManager m_bufferManager;  // represents a large reusable set of buffers for all socket operations
@@ -60,55 +56,33 @@ namespace FontServer
 
             try
             {
-
-                this._dbThread = new Thread(new ThreadStart(this.func_Connect2MongoDB));
+                
+                this._dbThread = new Thread(new ThreadStart(CMongoManager.func_Connect2MongoDB));
                 this._tcpThread = new Thread(new ThreadStart(this.tcp));
-                Console.WriteLine("DB서버 접속 시도 중 입니다...");
+                Console.WriteLine("* Now Tryig to Connect DB Server...");
 
                 this._dbThread.Start();
                 this._dbThread.Join();
 
                 this._tcpThread.Start();
-                Console.WriteLine("서버 초기화 성공");
-                Console.WriteLine("포트: " + this.tcp_port);
+                Console.Write("* Server Module Initialized.......... ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(" [SUCCESS]");
+                Console.ResetColor();
+               
 
             }
             catch (Exception e)
             {
-                Console.WriteLine("서버 초기화 실패");
+                Console.Write("* Server Module Initialized.......... ");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(" [FAILED]");
+                Console.ResetColor();
             }
 
         }
 
-        public void func_Connect2MongoDB()
-        {
-            try
-            {
-
-                this._db_client = new MongoClient(this._db_url);
-                _db_client.GetServer().Connect();
-                Console.WriteLine("MongoDB 서버 버전 정보: " + this._db_client.GetServer().BuildInfo.VersionString);
-                Console.WriteLine("MongoDB 서버 ip : " + this._db_url);
-                Console.WriteLine("MongoDB 서버 연결 상태: " + this._db_client.GetServer().State);
-                
-                
-                MongoDatabase testDb = this._db_client.GetServer().GetDatabase("test1");
-                if(testDb.CollectionExists("test_collection") == false)
-                    testDb.CreateCollection("test_collection");
-                Console.WriteLine("-----------------------------------------------------");
-            }
-            catch (MongoAuthenticationException me)
-            {
-                Console.WriteLine("DB 서버 인증 실패");
-            }
-            catch (MongoConnectionException mc)
-            {
-                 Console.WriteLine("DB 서버 접속 실패");
-                 Environment.Exit(0);
-            }
-
-
-        }
+       
 
         public void tcp()
         {
@@ -133,7 +107,7 @@ namespace FontServer
                 {
                     
                         Socket tcp_socket = _tcpListener.AcceptSocket();
-                        Console.WriteLine("클라이언트 연결 성공 [ip]: " + tcp_socket.RemoteEndPoint.ToString());
+                        Console.WriteLine("Client Connection Success [ip]: " + tcp_socket.RemoteEndPoint.ToString() +" time: " + System.DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"));
 
                         try
                         {
@@ -143,25 +117,31 @@ namespace FontServer
 
                             CPacket receivedPacket = Utility.func_ReadJson(received_byte);
                             Utility.func_DisplayPacketInfo(receivedPacket);
-                            int value = -1;
+                            ValueKind value = ValueKind.NONE;
 
-                            if (receivedPacket._newSequence.Length == 0)
+                            if (receivedPacket._newSequence.Length == 0 || receivedPacket._kind == CPacket.Kind.NONE)
                             {
-                                Console.WriteLine("[ip]: " + tcp_socket.RemoteEndPoint.ToString() + "가 의미없는 데이터를 보냈습니다.");
-                                Console.WriteLine("[ip] :" + tcp_socket.RemoteEndPoint.ToString() + " 접속 종료");
+                                Console.WriteLine("[ip]: " + tcp_socket.RemoteEndPoint.ToString() + " Send Non-meaninful Data");
+                                Console.WriteLine("[ip] :" + tcp_socket.RemoteEndPoint.ToString() + "'s Connection is Finished");
                                 tcp_socket.Close();
                                 break;
                             }
 
                             if (this.func_IsTrain(receivedPacket) == true)
                             {
+                                CMongoManager.func_insertTraingset(receivedPacket);
                                 this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
                                 this._cmm.func_train();
                             }
                             else if (this.func_IsRequest(receivedPacket) == true)
                             {
-                                Console.WriteLine("분석을 시작합니다.");
-                                value = this._cmm.func_analyze(receivedPacket._newSequence);
+                                Console.WriteLine("Now Starting Analysis from [ip] " + tcp_socket.RemoteEndPoint.ToString());
+                                CHMMGenerator newCmm = new CHMMGenerator(8, 50);
+                                
+                                //value = this._cmm.func_analyze(receivedPacket._newSequence);
+                                newCmm.func_train(this._cmm.func_getTrainingSet(), this._cmm.func_getOutputLabels());
+
+                                value = (ValueKind)(newCmm.func_analyze(receivedPacket._newSequence));
                             }
                             CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, value, receivedPacket._newSequence);
 
@@ -172,19 +152,19 @@ namespace FontServer
                         }
                         catch (NullReferenceException ne)
                         {
-                            Console.WriteLine("Null 패킷 발생");
+                            Console.WriteLine("[Exception] Null Packet occured");
                             int[] error = {-1};
-                            CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, -1, error );
+                            CPacket returnPacket = new CPacket(CPacket.Kind.RETURN, (ValueKind)ValueKindMap.mapping(256), error);
                             this.func_SendPacket2Client(returnPacket, tcp_socket);
                         }
-                    Console.WriteLine("[ip] :" + tcp_socket.RemoteEndPoint.ToString() + " 접속 종료");
+                    Console.WriteLine("[ip] : " + tcp_socket.RemoteEndPoint.ToString() + " 's Connection is Finished");
                     tcp_socket.Close();
                     Thread.Sleep(150);
                 }
             }
             catch (SocketException se)
             {
-                Console.WriteLine("클라이언트가 접속을 끊었습니다");
+                Console.WriteLine("Client discconected from Server");
                
             }
           

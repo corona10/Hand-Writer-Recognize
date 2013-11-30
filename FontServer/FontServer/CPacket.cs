@@ -8,6 +8,7 @@ namespace FontServer
 {
     class CPacket
     {
+       
         public enum Kind
         {
             NONE,
@@ -22,24 +23,24 @@ namespace FontServer
 
         public Kind _kind { get; set; }
         public int _datasize { get; set; }
-        public int _value { get; set; }
+        public ValueKind _value { get; set; }
         public int[] _newSequence { get; set; }
 
         public CPacket()
         {
             this._kind = Kind.NONE;
             this._newSequence = null;
-            
+
         }
 
-        public CPacket(Kind kind, int val, List<int> sequence)
+        public CPacket(Kind kind, ValueKind val, List<int> sequence)
         {
             this._kind = kind;
             this._value = val;
             this._newSequence = sequence.ToArray();
             this._datasize = this._newSequence.Length;
         }
-        public CPacket(Kind kind, int p1, int[] p2)
+        public CPacket(Kind kind, ValueKind p1, int[] p2)
         {
             // TODO: Complete member initialization
             this._kind = kind;
@@ -67,12 +68,12 @@ namespace FontServer
             return this._newSequence;
         }
 
-        public void func_SetValue(int val)
+        public void func_SetValue(ValueKind val)
         {
             this._value = val;
         }
 
-        public int func_GetValue()
+        public ValueKind func_GetValue()
         {
             return this._value;
         }

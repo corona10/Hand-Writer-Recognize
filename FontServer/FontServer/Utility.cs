@@ -48,7 +48,7 @@ namespace FontServer
         {
             String json = System.Text.Encoding.UTF8.GetString(receivedData);
             CPacket packet = JsonConvert.DeserializeObject<CPacket>(json);
-            
+
             return packet;
         }
 
@@ -60,6 +60,37 @@ namespace FontServer
         {
 
             Console.WriteLine("kind: " + packet.func_GetKind() + " value: " + packet.func_GetValue().ToString() + " sequence 길이: " + packet.func_GetSequence().Length);
+        }
+
+        static public void func_readSpray()
+        {
+            try
+            {
+                StreamReader sr = new StreamReader("spray.sp");
+
+
+                String line;
+
+                while ((line = sr.ReadLine()) != null)
+                {
+
+                    Console.WriteLine(line);
+
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("-----------------------------------------------------------------");
+                Console.WriteLine("------------------------Dev Team Information --------------------");
+                Console.WriteLine("* Dong-hee, Na - Network Programmer & Lead Programmer");
+                Console.WriteLine("* Sun-min, Kim,- Client Programmer with .NET");
+                Console.WriteLine("* Joon-woo, Choi, - Algorithm Designer");
+                Console.WriteLine("-----------------------------------------------------------------");
+                Console.WriteLine();
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine();
+            }
         }
     }
 }
