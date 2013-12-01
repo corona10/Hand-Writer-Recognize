@@ -141,7 +141,7 @@ namespace FontServer
                             else if (this.func_IsRequest(receivedPacket) == true)
                             {
                                 Console.WriteLine("Now Starting Analysis from [ip] " + tcp_socket.RemoteEndPoint.ToString());
-                                CHMMGenerator newCmm = new CHMMGenerator(8, 50);
+                                CHMMGenerator newCmm = new CHMMGenerator(8, 256);
                                 
                                 //value = this._cmm.func_analyze(receivedPacket._newSequence);
                                 newCmm.func_train(this._cmm.func_getTrainingSet(), this._cmm.func_getOutputLabels());
