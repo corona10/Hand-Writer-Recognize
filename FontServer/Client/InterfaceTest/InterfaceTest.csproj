@@ -32,8 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accord.MachineLearning">
+      <HintPath>..\..\..\..\FontServer\Hmm_Library\Hmm_Library\bin\Debug\Accord.MachineLearning.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Statistics">
+      <HintPath>..\..\..\..\FontServer\Hmm_Library\Hmm_Library\bin\Debug\Accord.Statistics.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Math">
+      <HintPath>..\..\..\..\FontServer\Hmm_Library\Hmm_Library\bin\Debug\AForge.Math.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\MouseProcessing\MouseProcessing\bin\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\FontServer\Json50r8\Bin\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ServerUtility">
       <HintPath>..\..\..\..\MouseProcessing\MouseProcessing\bin\Debug\ServerUtility.dll</HintPath>
