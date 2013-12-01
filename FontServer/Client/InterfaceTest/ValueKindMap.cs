@@ -81,17 +81,18 @@ namespace InterfaceTest
 
             return _value;
         }
-
-        static public string inverseMapping(CPacket.ValueKind value)
+        /*
+        static public int inverseMappingRetINT(ValueKind value)
         {
-            int temp = (int)value;
-
-            if (temp >= 0 && temp <= 9)
-                return Convert.ToString(temp);
-            else if (temp >= 10 && temp <= 62)
-                return value.ToString();
+            if (value != ValueKind.NONE)
+                return 
             else
-                return null;
+                return -1;
+        }*/
+
+        static public int GetIndex(ValueKind _value)
+        {
+            return (int)_value;
         }
     }
 }

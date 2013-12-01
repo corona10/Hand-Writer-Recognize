@@ -113,7 +113,7 @@ namespace InterfaceTest
                     if ((Convert.ToInt32(infoTextBox.Text) >= 0 && Convert.ToInt32(infoTextBox.Text) <= 9))
                     {
                         CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text)), direction.ToArray());
-                        MessageBox.Show("ValueKind : " + (CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text)));
+                        MessageBox.Show("인식값: " + ValueKindMap.GetIndex((ValueKindMap.ValueKind)(CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text))));
                         Thread th = new Thread(new ParameterizedThreadStart(run));
                         th.Start(packet);
                     }
@@ -126,15 +126,13 @@ namespace InterfaceTest
                     {
                         if ( Convert.ToChar(infoTextBox.Text) >= 'a' && Convert.ToChar(infoTextBox.Text) <= 'z')
                         {
-                            CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text)-61), direction.ToArray());
-                            MessageBox.Show("ValueKind : " +  (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text)-61));
+                            CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text)-61), direction.ToArray());                            
                             Thread th = new Thread(new ParameterizedThreadStart(run));
                             th.Start(packet);
                         }
                         else if (Convert.ToChar(infoTextBox.Text) >= 'A' && Convert.ToChar(infoTextBox.Text) <= 'Z')
                         {
                             CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text) - 55), direction.ToArray());
-                            MessageBox.Show("ValueKind : " + (CPacket.ValueKind)ValueKindMap.mapping((int)Convert.ToChar(infoTextBox.Text) - 55));
                             Thread th = new Thread(new ParameterizedThreadStart(run));
                             th.Start(packet);
                         }
@@ -167,63 +165,7 @@ namespace InterfaceTest
             _savedPointX.Clear();
             _savedPointY.Clear();
         }
-        /*
-        private int GetDirection(int x1, int y1, int x2, int y2)
-        {
-            double x3, y3;
-            x3 = x2 - x1;
-            y3 = y1 - y2;
-            double angle = Math.Atan((double)y3 / (double)Math.Abs(x3));
-            if (x3 < 0)
-            {
-                if (angle < -Math.PI * 3 / 8)
-                {
-                    return 6;
-                }
-                else if (angle >= -Math.PI * 3 / 8 && angle < -Math.PI / 8)
-                {
-                    return 5;
-                }
-                else if (angle >= -Math.PI / 8 && angle < Math.PI / 8)
-                {
-                    return 4;
-                }
-                else if (angle >= Math.PI / 8 && angle < Math.PI * 3 / 8)
-                {
-                    return 3;
-                }
-                else if (angle >= Math.PI * 3 / 8)
-                {
-                    return 2;
-                }
-            }
-            else
-            {
-                if (angle < -Math.PI * 3 / 8)
-                {
-                    return 6;
-                }
-                else if (angle >= -Math.PI * 3 / 8 && angle < -Math.PI / 8)
-                {
-                    return 7;
-                }
-                else if (angle >= -Math.PI / 8 && angle < Math.PI / 8)
-                {
-                    return 0;
-                }
-                else if (angle >= Math.PI / 8 && angle < Math.PI * 3 / 8)
-                {
-                    return 1;
-                }
-                else if (angle >= Math.PI * 3 / 8)
-                {
-                    return 2;
-                }
-            }
-           
-            return -1;
-        }
-        */
+        
         private void run(object packet)
         {
             try
@@ -256,16 +198,28 @@ namespace InterfaceTest
 
                         CPacket test_read_packet = Utility.func_ReadJson(received);
 
-                        if (ValueKindMap.inverseMapping(test_read_packet._value) != null)
+                        if ((ValueKindMap.ValueKind)test_read_packet._value >= ValueKindMap.ValueKind.ONE
+                            && (ValueKindMap.ValueKind)test_read_packet._value <= ValueKindMap.ValueKind.NINE)
+                        {
+                            //textBox4에 출력
+                            _text += ValueKindMap.GetIndex((ValueKindMap.ValueKind)test_read_packet._value);
+                            textBox.Text = _text;
+                            MessageBox.Show("인식값: " + ValueKindMap.GetIndex((ValueKindMap.ValueKind)test_read_packet._value));
+                        }
+                        else if ((ValueKindMap.ValueKind)test_read_packet._value >= ValueKindMap.ValueKind.A
+                            && (ValueKindMap.ValueKind)test_read_packet._value <= ValueKindMap.ValueKind.z)
                         {
                             //textBox4에 출력
                             _text += test_read_packet._value.ToString();
                             textBox.Text = _text;
                             MessageBox.Show("인식값: " + test_read_packet._value.ToString());
                         }
+                        else if (trainRadioButton.Checked)
+                            MessageBox.Show("Training 완료");
                         else
                             MessageBox.Show("인식 실패");
                     }
+                    
                     Thread.Sleep(150);
                 }
                 tcpStream.Close();

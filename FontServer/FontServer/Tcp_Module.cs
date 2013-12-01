@@ -122,7 +122,7 @@ namespace FontServer
 
                             CPacket receivedPacket = Utility.func_ReadJson(received_byte);
                             Utility.func_DisplayPacketInfo(receivedPacket);
-                            Console.WriteLine("test: " + (int)receivedPacket._value);
+                         
                             ValueKind value = ValueKind.NONE;
 
                             if (receivedPacket._newSequence.Length == 0 || receivedPacket._kind == CPacket.Kind.NONE)
@@ -207,6 +207,7 @@ namespace FontServer
         private void func_SendPacket2Client(CPacket packet, Socket sc)
         {
             string json = Utility.func_WriteJson(packet);
+            
             byte[] sendbyte = Utility.func_Json2Byte(json);
 
             sc.Send(sendbyte, sendbyte.Length, 0);
