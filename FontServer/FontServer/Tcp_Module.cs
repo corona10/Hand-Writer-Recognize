@@ -122,6 +122,7 @@ namespace FontServer
 
                             CPacket receivedPacket = Utility.func_ReadJson(received_byte);
                             Utility.func_DisplayPacketInfo(receivedPacket);
+                            Console.WriteLine("test: " + (int)receivedPacket._value);
                             ValueKind value = ValueKind.NONE;
 
                             if (receivedPacket._newSequence.Length == 0 || receivedPacket._kind == CPacket.Kind.NONE)
@@ -135,6 +136,7 @@ namespace FontServer
                             if (this.func_IsTrain(receivedPacket) == true)
                             {
                                 this._cMongo.func_insertTraingset(receivedPacket);
+                               
                                 this._cmm.func_addTrainingSet((int)receivedPacket._value, receivedPacket._newSequence);
                                 this._cmm.func_train();
                             }
