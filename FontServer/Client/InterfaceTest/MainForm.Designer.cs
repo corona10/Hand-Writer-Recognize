@@ -55,7 +55,7 @@
             this.sendButton.TabIndex = 2;
             this.sendButton.Text = "OK";
             this.sendButton.UseVisualStyleBackColor = true;
-            this.sendButton.Click += new System.EventHandler(this.button2_Click);
+            this.sendButton.Click += new System.EventHandler(this.sendButton_Click);
             // 
             // trainRadioButton
             // 
@@ -67,7 +67,7 @@
             this.trainRadioButton.TabStop = true;
             this.trainRadioButton.Text = "Training";
             this.trainRadioButton.UseVisualStyleBackColor = true;
-            this.trainRadioButton.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            this.trainRadioButton.CheckedChanged += new System.EventHandler(this.trainRadioButton_CheckedChanged);
             // 
             // analysisRadioButton
             // 
@@ -79,7 +79,7 @@
             this.analysisRadioButton.TabStop = true;
             this.analysisRadioButton.Text = "Analysis";
             this.analysisRadioButton.UseVisualStyleBackColor = true;
-            this.analysisRadioButton.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            this.analysisRadioButton.CheckedChanged += new System.EventHandler(this.analysisRadioButton_CheckedChanged);
             // 
             // modeGroupBox
             // 
@@ -127,7 +127,7 @@
             this.clearButton.TabIndex = 7;
             this.clearButton.Text = "Clear";
             this.clearButton.UseVisualStyleBackColor = true;
-            this.clearButton.Click += new System.EventHandler(this.button3_Click);
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
             // IP_TextBox
             // 
@@ -188,7 +188,7 @@
             this.saveButton.TabIndex = 14;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.button1_Click);
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // deleteButton
             // 
@@ -198,7 +198,7 @@
             this.deleteButton.TabIndex = 16;
             this.deleteButton.Text = "Delete All";
             this.deleteButton.UseVisualStyleBackColor = true;
-            this.deleteButton.Click += new System.EventHandler(this.button5_Click);
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
             // MainForm
             // 

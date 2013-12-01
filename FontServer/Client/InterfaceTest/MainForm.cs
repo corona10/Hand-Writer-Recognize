@@ -78,24 +78,7 @@ namespace InterfaceTest
             _pY = e.Y;
         }
 
-        /*
-        private static DateTime Delay(int MS)
-        {
-            DateTime ThisMoment = DateTime.Now;
-            TimeSpan duration = new TimeSpan(0, 0, 0, 0, MS);
-            DateTime AfterWards = ThisMoment.Add(duration);
-
-            while (AfterWards >= ThisMoment)
-            {
-                System.Windows.Forms.Application.DoEvents();
-                ThisMoment = DateTime.Now;
-            }
-
-            return DateTime.Now;
-        }
-        */
-
-        private void button2_Click(object sender, EventArgs e)
+        private void sendButton_Click(object sender, EventArgs e)
         {
             Graphics g = CreateGraphics();
             List<int> direction = new List<int>();
@@ -106,7 +89,7 @@ namespace InterfaceTest
             // Calculate Direction
             for (int i = 0; i < _savedPointX.Count - 1; i++)
             {
-                int tempDirection = GetDirection(_savedPointX[i], _savedPointY[i], _savedPointX[i + 1], _savedPointY[i + 1]);
+                int tempDirection = Direction.GetDirection(_savedPointX[i], _savedPointY[i], _savedPointX[i + 1], _savedPointY[i + 1]);
                 if (tempDirection != -1)
                 {
                     direction.Add(tempDirection);
@@ -171,7 +154,6 @@ namespace InterfaceTest
                 CPacket packet = new CPacket(CPacket.Kind.REQUEST, CPacket.ValueKind.NONE, direction);
                 Thread th = new Thread(new ParameterizedThreadStart(run));
                 th.Start(packet);
-                //MessageBox.Show();
             }
             //Don`t checking
             else
@@ -185,12 +167,10 @@ namespace InterfaceTest
             _savedPointX.Clear();
             _savedPointY.Clear();
         }
-
+        /*
         private int GetDirection(int x1, int y1, int x2, int y2)
         {
-            //int direction=0;
             double x3, y3;
-            //double angle;
             x3 = x2 - x1;
             y3 = y1 - y2;
             double angle = Math.Atan((double)y3 / (double)Math.Abs(x3));
@@ -240,78 +220,10 @@ namespace InterfaceTest
                     return 2;
                 }
             }
-            /*
-            x3 = x2 - x1;
-            y3 = y1 - y2;
-
-
-
-            if (x3 == 0)
-            {
-                x3 = 0.00000001;
-            }
-            if(y3>=0 && x3 >=0)
-                angle = Math.Atan(y3 / x3);
-
-
-            if (0 <= angle && angle < Constants.PI / 4)
-                direction = 0;
-            else if (Constants.PI / 4 <= angle && angle < Constants.PI / 2)
-                direction = 1;
-            else if (Constants.PI / 2 <= angle && angle < Constants.PI * 3 / 4)
-                direction = 2;
-            else if (Constants.PI * 3 / 4 <= angle && angle < Constants.PI)
-                direction = 3;
-            else if (Constants.PI <= angle && angle < Constants.PI * 5 / 4)
-                direction = 4;
-            else if (Constants.PI * 5 / 4 <= angle && angle < Constants.PI * 3 / 2)
-                direction = 5;
-            else if (Constants.PI * 3 / 2 <= angle && angle < Constants.PI * 7 / 4)
-                direction = 6;
-            else if (Constants.PI * 7 / 4 <= angle && angle < Constants.PI * 2)
-                direction = 7;
-            */
-            /*
-            if (x3 < 0)
-                angle += (Constants.PI);
-
-            if (x2 >= x1 && y2 >= y1)
-                angle += 2 * Constants.PI;
-
-            direction = (int)(angle * 8 / Constants.PI + 1) / 2;
-
-            switch (direction)
-            {
-                case 0:
-                case 8:
-                    direction = 0;
-                    break;
-                case 1:
-                    direction = 1;
-                    break;
-                case 2:
-                    direction = 2;
-                    break;
-                case 3:
-                    direction = 3;
-                    break;
-                case 4:
-                    direction = 4;
-                    break;
-                case 5:
-                    direction = 5;
-                    break;
-                case 6:
-                    direction = 6;
-                    break;
-                case 7:
-                    direction = 7;
-                    break;
-            }
-            */
+           
             return -1;
         }
-
+        */
         private void run(object packet)
         {
             try
@@ -344,10 +256,15 @@ namespace InterfaceTest
 
                         CPacket test_read_packet = Utility.func_ReadJson(received);
 
-                        //textBox4에 출력
-                        _text += test_read_packet._value.ToString();
-                        textBox.Text = _text;
-                        MessageBox.Show("인식값: " + test_read_packet._value.ToString());
+                        if (ValueKindMap.inverseMapping(test_read_packet._value) != null)
+                        {
+                            //textBox4에 출력
+                            _text += test_read_packet._value.ToString();
+                            textBox.Text = _text;
+                            MessageBox.Show("인식값: " + test_read_packet._value.ToString());
+                        }
+                        else
+                            MessageBox.Show("인식 실패");
                     }
                     Thread.Sleep(150);
                 }
@@ -362,13 +279,13 @@ namespace InterfaceTest
         }
 
         //Analysis RadioButton
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void analysisRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             infoTextBox.Enabled = false;
         }
 
         //Training RadioButton
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void trainRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             infoTextBox.Enabled = true;
         }
@@ -379,7 +296,7 @@ namespace InterfaceTest
         }
 
         //Clear Button
-        private void button3_Click(object sender, EventArgs e)
+        private void clearButton_Click(object sender, EventArgs e)
         {
             panel.Refresh();
             _count = 0;
@@ -388,7 +305,7 @@ namespace InterfaceTest
         }
 
         //Save Button
-        private void button1_Click(object sender, EventArgs e)
+        private void saveButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFile = new SaveFileDialog();
             saveFile.InitialDirectory = @"C:\";
@@ -402,13 +319,11 @@ namespace InterfaceTest
                 streamWriter.Write(textBox.Text);
 
                 streamWriter.Close();
-
-                MessageBox.Show("저장 완료");
             } 
         }
 
         //Delete All Button
-        private void button5_Click(object sender, EventArgs e)
+        private void deleteButton_Click(object sender, EventArgs e)
         {
             _text = null;
             textBox.Text = _text;
