@@ -45,7 +45,7 @@
       <HintPath>..\..\..\..\FontServer\Json50r8\Bin\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ServerUtility">
-      <HintPath>..\..\..\..\MouseProcessing\MouseProcessing\bin\Debug\ServerUtility.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\FontServer\ServerUtility\bin\Debug\ServerUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

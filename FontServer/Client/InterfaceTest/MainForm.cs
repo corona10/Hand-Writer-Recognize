@@ -113,7 +113,6 @@ namespace InterfaceTest
                     if ((Convert.ToInt32(infoTextBox.Text) >= 0 && Convert.ToInt32(infoTextBox.Text) <= 9))
                     {
                         CPacket packet = new CPacket(CPacket.Kind.TRAINING_SET, (CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text)), direction.ToArray());
-                        MessageBox.Show("인식값: " + ValueKindMap.GetIndex((ValueKindMap.ValueKind)(CPacket.ValueKind)ValueKindMap.mapping(Convert.ToInt32(infoTextBox.Text))));
                         Thread th = new Thread(new ParameterizedThreadStart(run));
                         th.Start(packet);
                     }
