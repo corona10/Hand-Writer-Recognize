@@ -13,7 +13,7 @@ namespace FontServer
     {
         private static CMongoManager instance = null;
         private static readonly object padlock = new object();
-        private static string _db_url = "mongodb://localhost:21/test";
+        private static string _db_url = "mongodb://localhost";
         private static MongoClient _db_client;
         private static MongoCollection<CCollectionData> _dbCollection;
         private static MongoDatabase _testDb;

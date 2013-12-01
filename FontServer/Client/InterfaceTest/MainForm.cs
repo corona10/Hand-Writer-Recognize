@@ -165,7 +165,14 @@ namespace InterfaceTest
             _savedPointX.Clear();
             _savedPointY.Clear();
         }
-        
+
+        private void func_text(string _text)
+        {
+            textBox.Text = _text;
+        }
+
+        private delegate void thDelegate(string _text);
+
         private void run(object packet)
         {
             try
@@ -174,7 +181,7 @@ namespace InterfaceTest
                 TcpClient tcpClient = new TcpClient(this._server, this._tcpPort);
                 //Create a NetworkStream for this tcpClient instance. 
                 //This is only required for TCP stream. 
-
+                DONE = false;
                 CPacket pac = (CPacket)packet;
                 NetworkStream tcpStream = tcpClient.GetStream();
                 if (tcpStream.CanWrite)
@@ -203,21 +210,31 @@ namespace InterfaceTest
                         {
                             //textBox4에 출력
                             _text += ValueKindMap.GetIndex((ValueKindMap.ValueKind)test_read_packet._value);
-                            textBox.Text = _text;
+                            //textBox.Text = _text;
+                            this.Invoke(new thDelegate(func_text), _text);
                             MessageBox.Show("인식값: " + ValueKindMap.GetIndex((ValueKindMap.ValueKind)test_read_packet._value));
+                            DONE = true;
                         }
                         else if ((ValueKindMap.ValueKind)test_read_packet._value >= ValueKindMap.ValueKind.A
                             && (ValueKindMap.ValueKind)test_read_packet._value <= ValueKindMap.ValueKind.z)
                         {
                             //textBox4에 출력
                             _text += test_read_packet._value.ToString();
-                            textBox.Text = _text;
+                            //textBox.Text = _text;
+                            this.Invoke(new thDelegate(func_text), _text);
                             MessageBox.Show("인식값: " + test_read_packet._value.ToString());
+                            DONE = true;
                         }
                         else if (trainRadioButton.Checked)
+                        {
                             MessageBox.Show("Training 완료");
+                            DONE = true;
+                        }
                         else
+                        {
                             MessageBox.Show("인식 실패");
+                            DONE = true;
+                        }
                     }
                     
                     Thread.Sleep(150);
