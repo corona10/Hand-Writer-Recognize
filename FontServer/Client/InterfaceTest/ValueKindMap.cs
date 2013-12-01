@@ -82,13 +82,11 @@ namespace InterfaceTest
             return _value;
         }
 
-        static public string inverseMapping(CPacket.ValueKind value)
+        static public string inverseMapping(ValueKind value)
         {
-            int temp = (int)value;
-
-            if (temp >= 0 && temp <= 9)
-                return Convert.ToString(temp);
-            else if (temp >= 10 && temp <= 62)
+            if (value >= ValueKind.ZERO && value <= ValueKind.NINE)
+                return value.ToString();
+            else if (value >= ValueKind.A && value <= ValueKind.z)
                 return value.ToString();
             else
                 return null;

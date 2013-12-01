@@ -256,7 +256,7 @@ namespace InterfaceTest
 
                         CPacket test_read_packet = Utility.func_ReadJson(received);
 
-                        if (ValueKindMap.inverseMapping(test_read_packet._value) != null)
+                        if (ValueKindMap.inverseMapping((ValueKindMap.ValueKind)test_read_packet._value) != null)
                         {
                             //textBox4에 출력
                             _text += test_read_packet._value.ToString();
