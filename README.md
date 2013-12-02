@@ -12,7 +12,9 @@ HandWriter pattErn Recoginzing Application (HERA)
 * Sun-min, Kim - Client Programmer
 
 # Description
-This project is a short-term project(2 weeks) for Object Oriented Design Lecture of Chung-Nam National Univ.
+This project is a short-term project(2 weeks) for Object Oriented Design Lecture of [Chung-Nam National Univ(English)](http://plus.cnu.ac.kr/english/index.jsp).
+
+We released our source code as open source under [MIT licence](http://opensource.org/licenses/mit-license.php).
 
  
 
