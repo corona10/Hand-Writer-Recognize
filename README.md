@@ -1,20 +1,27 @@
-HandWriter Pattern Recoginzing Application
+HandWriter pattErn Recoginzing Application (HERA)
 =====================
 
 2013 Chung-nam National University OOP Term Project
 
-Dong-hee,Na - Project Leader & Network Programmer
+# Dev Team
 
-Joon-woo, Choi - Algorithm Writer
+* Dong-hee,Na - Project Leader & Network Programmer
 
-Sun-min, Kim - Client Programmer
+* Joon-woo, Choi - Algorithm Writer
 
+* Sun-min, Kim - Client Programmer
 
+# Description
+This project is a short-time project(2 weeks) for Object Oriented Design Lecture of Chung-Nam National Univ.
+
+ 
+
+# License
 -----------------------------------------------------------------------------
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Dong-hee,Na & Joon-woo, Choi & Sun-min, Kim
+Copyright (c) 2013 Dong-hee,Na <corona10@gmail.com> Jun-woo, Choi <choigo92@gmail.com>  Sun-min, Kim <mh5537@naver.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +44,8 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 
 MIT 라이선스
-Copyright (c) 2013 나동희 , 최준우 , 김선민
+
+Copyright (c) 2013 나동희 <corona10@gmail.com> , 최준우 <choigo92@gmail.com> , 김선민 <mh5537@naver.com>
  
 이 소프트웨어의 복제본과 관련된 문서화 파일(“소프트웨어”)을 획득하는 사람은 누구라도 소프트웨어를 별다른 제한 없이 무상으로 사용할 수 있는 권한을 부여 받는다. 여기에는 소프트웨어의 복제본을 무제한으로 사용, 복제, 수정, 병합, 공표, 배포, 서브라이선스 설정 및 판매할 수 있는 권리와 이상의 행위를 소프트웨어를 제공받은 다른 수취인들에게 허용할 수 있는 권리가 포함되며, 다음과 같은 조건을 충족시키는 것을 전제로 한다.
  
